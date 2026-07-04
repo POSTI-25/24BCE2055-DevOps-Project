@@ -1,0 +1,46 @@
+services:
+  nagios:
+    image: jasonrivers/nagios:latest
+    container_name: nagios
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      NAGIOSADMIN_USER: admin
+      # nagiosadmin , admin 
+      NAGIOSADMIN_PASS: devops123
+    volumes:
+      - nagios-state:/opt/nagios/var
+
+  graphite:
+    image: graphiteapp/graphite-statsd:latest
+    container_name: graphite
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+      - "2003:2003"
+      - "2004:2004"
+      - "8125:8125/udp"
+    volumes:
+      - graphite-storage:/opt/graphite/storage
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin123
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - graphite
+
+volumes:
+  nagios-state:
+  graphite-storage:
+  grafana-storage:

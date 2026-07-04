@@ -1,0 +1,10 @@
+.git
+.gitignore
+context.md
+README.md
+**/node_modules
+**/build
+**/coverage
+**/.DS_Store
+**/npm-debug.log*
+intranet-portal/.env
